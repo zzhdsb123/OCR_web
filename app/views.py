@@ -7,7 +7,8 @@ from werkzeug.utils import secure_filename
 from datetime import timedelta
 import datetime
 import os
-from time import sleep
+from app.helper import *
+from boto3.dynamodb.conditions import Key
 
 # the following four image extensions are allowed
 app.config["allowed_img"] = ["png", "jpg", "jpeg", "fig"]
@@ -33,8 +34,6 @@ def allowed_img(filename):
 
 @app.route('/')
 def index():
-    if 'user' in session:
-        return redirect(url_for('user'))
     return render_template('index.html')
 
 
@@ -106,6 +105,7 @@ def register():
         )
 
         session['user'] = username
+        return render_template('user.html')
 
     context = {
         'username_valid': -1,
@@ -196,7 +196,7 @@ def preview():
     namelist = []
     for i in response:
         if 'user' in i and i['user'] == username:
-            namelist.append((i['name'], i['date'], i['image_id']))
+            namelist.append((i['name'], i['date']))
     hists = {}
     s3 = boto3.client('s3')
     for item in namelist:
@@ -205,7 +205,7 @@ def preview():
                                         Params={'Bucket': 'chaoshuai',
                                                 'Key': 'ocr/' + image,
                                                 })
-        hists[url] = (image, item[1], item[2])
+        hists[url] = (image, item[1])
     return render_template('preview.html', hists=hists)
 
 
@@ -213,31 +213,9 @@ def preview():
 def receipt_detail(img_name):
     if 'user' not in session:
         return redirect(url_for('index'))
-    img_id, ext = img_name.rsplit(".", 1)
-    table = boto3.resource('dynamodb').Table('Receipts')
-    response = table.scan()['Items']
-    hists = {}
-    for item in response:
-        if 'img_id' in item and item['img_id'] == img_id:
-            if item['item_name'] != 'TotalPrice':
-                info = {'img_id': item['img_id'],
-                        'item_name': item['item_name'],
-                        'price': item['price']
-                        }
-                item_id = item['id']
-                hists[item_id] = info
-            else:
-                info = {'img_id': item['img_id'],
-                        'item_name': item['item_name'],
-                        'price': item['price']
-                        }
-                item_id = item['id']
-                total_price = {item_id: info}
-    try:
-        total_price
-    except UnboundLocalError:
-        return render_template('not_ready.html', img_name=img_name)
-    return render_template('detail.html', hists=hists, img_id=img_id, total_price=total_price)
+    rd=receipt_detail_maker(img_name)
+    context=rd.get_form()
+    return render_template('detail.html', **context)
 
 
 @app.route('/modify/<img_id>', methods=['GET', 'POST'])
@@ -280,16 +258,6 @@ def modify(img_id):
         return redirect(url_for('receipt_detail', img_name=img_name))
 
 
-@app.route('/delete/<img_id>/<img_name>')
-def delete(img_id, img_name):
-    # return img_id
-    client = boto3.client('s3')
-    client.delete_object(Bucket='chaoshuai', Key='ocr/'+img_name)
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('images')
-    table.delete_item(
-        Key={
-            'image_id': int(img_id)
-        }
-    )
-    return redirect(url_for('preview'))
+@app.route('/delete')
+def delete():
+    pass
