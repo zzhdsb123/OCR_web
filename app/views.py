@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 from datetime import timedelta
 import datetime
 import os
+from app.helper import *
 from boto3.dynamodb.conditions import Key
 
 # the following four image extensions are allowed
@@ -104,6 +105,7 @@ def register():
         )
 
         session['user'] = username
+        return render_template('user.html')
 
     context = {
         'username_valid': -1,
@@ -211,27 +213,9 @@ def preview():
 def receipt_detail(img_name):
     if 'user' not in session:
         return redirect(url_for('index'))
-    img_id, ext = img_name.rsplit(".", 1)
-    table = boto3.resource('dynamodb').Table('Receipts')
-    response = table.scan()['Items']
-    hists = {}
-    for item in response:
-        if 'img_id' in item and item['img_id'] == img_id:
-            if item['item_name'] != 'TotalPrice':
-                info = {'img_id': item['img_id'],
-                        'item_name': item['item_name'],
-                        'price': item['price']
-                        }
-                item_id = item['id']
-                hists[item_id] = info
-            else:
-                info = {'img_id': item['img_id'],
-                        'item_name': item['item_name'],
-                        'price': item['price']
-                        }
-                item_id = item['id']
-                total_price = {item_id: info}
-    return render_template('detail.html', hists=hists, img_id=img_id, total_price=total_price)
+    rd=receipt_detail_maker(img_name)
+    context=rd.get_form()
+    return render_template('detail.html', **context)
 
 
 @app.route('/modify/<img_id>', methods=['GET', 'POST'])
