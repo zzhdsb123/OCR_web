@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="061aa26a-54ee-436b-b32c-7b67cdf9a9c7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -136,7 +134,7 @@
       <workItem from="1574824521891" duration="870000" />
       <workItem from="1574833095966" duration="2079000" />
       <workItem from="1574881744782" duration="3473000" />
-      <workItem from="1574885771549" duration="4679000" />
+      <workItem from="1574885771549" duration="4748000" />
     </task>
     <task id="LOCAL-00001" summary="4.40">
       <created>1574890856260</created>
@@ -152,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574891158584</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="4.52">
+      <created>1574891526709</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1574891526709</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -174,7 +179,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="4.40" />
     <MESSAGE value="4.45" />
-    <option name="LAST_COMMIT_MESSAGE" value="4.45" />
+    <MESSAGE value="4.52" />
+    <option name="LAST_COMMIT_MESSAGE" value="4.52" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OCR_web$create_table.coverage" NAME="create_table Coverage Results" MODIFIED="1574812979810" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
