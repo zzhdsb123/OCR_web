@@ -261,7 +261,7 @@ def modify(img_id):
                     total_price = item
         receipt_id = total_price['id']
         new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
-                    'price': {'S': str(total)},
+                    'price': {'S': request.form.get('price.' + receipt_id)},
                     'id': {"S": receipt_id},
                     'img_id': {'S': total_price['img_id']}}
         dynamodb.put_item(
