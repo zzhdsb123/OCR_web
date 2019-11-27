@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="061aa26a-54ee-436b-b32c-7b67cdf9a9c7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/templates/not_ready.html" afterDir="false" />
+    <list default="true" id="061aa26a-54ee-436b-b32c-7b67cdf9a9c7" name="Default Changelist" comment="Merge branch 'master' of https://github.com/zzhdsb123/OCR_web&#10;&#10;# Conflicts:&#10;#&#9;app/views.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/preview.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/preview.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,6 +33,7 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/app/templates" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
@@ -140,7 +139,7 @@
       <workItem from="1574824521891" duration="870000" />
       <workItem from="1574833095966" duration="2079000" />
       <workItem from="1574881744782" duration="3473000" />
-      <workItem from="1574885771549" duration="8001000" />
+      <workItem from="1574885771549" duration="8563000" />
     </task>
     <task id="LOCAL-00001" summary="4.40">
       <created>1574890856260</created>
@@ -170,11 +169,28 @@
       <option name="project" value="LOCAL" />
       <updated>1574891576593</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="6.10">
+      <created>1574896243115</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1574896243115</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -194,10 +210,11 @@
     <MESSAGE value="4.40" />
     <MESSAGE value="4.45" />
     <MESSAGE value="4.52" />
-    <option name="LAST_COMMIT_MESSAGE" value="4.52" />
+    <MESSAGE value="6.10" />
+    <option name="LAST_COMMIT_MESSAGE" value="6.10" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OCR_web$create_table.coverage" NAME="create_table Coverage Results" MODIFIED="1574812979810" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/OCR_web$run.coverage" NAME="run Coverage Results" MODIFIED="1574895397111" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OCR_web$run.coverage" NAME="run Coverage Results" MODIFIED="1574896419399" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
