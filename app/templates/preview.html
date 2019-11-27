@@ -27,7 +27,7 @@
                                 <a href="{{ url_for('receipt_detail', img_name=name.0, reload='0') }}">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Detail</button>
                                 </a>
-                                <a href="{{ url_for('delete', img_name=name.0) }}">
+                                <a href="{{ url_for('delete', img_id=name.2, img_name=name.0) }}">
                                     <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
                                 </a>
                                 <!--<button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>-->

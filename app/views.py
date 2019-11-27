@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from datetime import timedelta
 import datetime
 import os
-from boto3.dynamodb.conditions import Key
+from time import sleep
 
 # the following four image extensions are allowed
 app.config["allowed_img"] = ["png", "jpg", "jpeg", "fig"]
@@ -33,6 +33,8 @@ def allowed_img(filename):
 
 @app.route('/')
 def index():
+    if 'user' in session:
+        return redirect(url_for('user'))
     return render_template('index.html')
 
 
@@ -194,7 +196,7 @@ def preview():
     namelist = []
     for i in response:
         if 'user' in i and i['user'] == username:
-            namelist.append((i['name'], i['date']))
+            namelist.append((i['name'], i['date'], i['image_id']))
     hists = {}
     s3 = boto3.client('s3')
     for item in namelist:
@@ -203,7 +205,7 @@ def preview():
                                         Params={'Bucket': 'chaoshuai',
                                                 'Key': 'ocr/' + image,
                                                 })
-        hists[url] = (image, item[1])
+        hists[url] = (image, item[1], item[2])
     return render_template('preview.html', hists=hists)
 
 
@@ -231,6 +233,10 @@ def receipt_detail(img_name):
                         }
                 item_id = item['id']
                 total_price = {item_id: info}
+    try:
+        total_price
+    except UnboundLocalError:
+        return render_template('not_ready.html', img_name=img_name)
     return render_template('detail.html', hists=hists, img_id=img_id, total_price=total_price)
 
 
@@ -274,6 +280,16 @@ def modify(img_id):
         return redirect(url_for('receipt_detail', img_name=img_name))
 
 
-@app.route('/delete')
-def delete():
-    pass
+@app.route('/delete/<img_id>/<img_name>')
+def delete(img_id, img_name):
+    # return img_id
+    client = boto3.client('s3')
+    client.delete_object(Bucket='chaoshuai', Key='ocr/'+img_name)
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('images')
+    table.delete_item(
+        Key={
+            'image_id': int(img_id)
+        }
+    )
+    return redirect(url_for('preview'))
