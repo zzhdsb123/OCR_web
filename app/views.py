@@ -248,7 +248,7 @@ def modify(img_id):
             if 'img_id' in item and item['img_id'] == img_id:
                 if item['item_name'] != 'TotalPrice':
                     receipt_id = item['id']
-                    total += float(item['price'])
+                    total += float(request.form.get('price.' + receipt_id))
                     new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
                                 'price': {'S': request.form.get('price.' + receipt_id)},
                                 'id': {"S": receipt_id},
@@ -269,6 +269,8 @@ def modify(img_id):
             Item=new_item
         )
         img_name = dynamodb.get_item(TableName='images', Key={'image_id': {'N': img_id}})["Item"]['name']['S']
+        # response = dynamodb.get_item(TableName='Receipts', Key={'id': {'S': receipt_id}})["Item"]
+        # return response
         return redirect(url_for('receipt_detail', img_name=img_name))
 
 
