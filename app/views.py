@@ -147,7 +147,7 @@ def upload():
                 dynamodb = boto3.client('dynamodb')
                 response = dynamodb.get_item(TableName='images', Key={'image_id': {'N': '0'}})
                 current_id = response['Item']['current_id']['N']
-                current_id = str(int(current_id)+1)
+                current_id = str(int(current_id) + 1)
                 name = current_id + '.' + ext
                 file.save(name)
                 dynamodb.put_item(
@@ -171,7 +171,7 @@ def upload():
                     }
                 )
                 s3 = boto3.client('s3')
-                s3.upload_file(name, 'chaoshuai', 'ocr/'+name)
+                s3.upload_file(name, 'chaoshuai', 'ocr/' + name)
                 os.remove(name)
         return render_template('upload_success.html')
 
@@ -217,13 +217,21 @@ def receipt_detail(img_name):
     hists = {}
     for item in response:
         if 'img_id' in item and item['img_id'] == img_id:
-            info = {'img_id': item['img_id'],
-                    'item_name': item['item_name'],
-                    'price': item['price']
-                    }
-            item_id = item['id']
-            hists[item_id] = info
-    return render_template('detail.html', hists=hists, img_id=img_id)
+            if item['item_name'] != 'TotalPrice':
+                info = {'img_id': item['img_id'],
+                        'item_name': item['item_name'],
+                        'price': item['price']
+                        }
+                item_id = item['id']
+                hists[item_id] = info
+            else:
+                info = {'img_id': item['img_id'],
+                        'item_name': item['item_name'],
+                        'price': item['price']
+                        }
+                item_id = item['id']
+                total_price = {item_id: info}
+    return render_template('detail.html', hists=hists, img_id=img_id, total_price=total_price)
 
 
 @app.route('/modify/<img_id>', methods=['GET', 'POST'])
@@ -234,21 +242,36 @@ def modify(img_id):
         table = boto3.resource('dynamodb').Table('Receipts')
         response = table.scan()['Items']
         dynamodb = boto3.client('dynamodb')
+        total = 0
+        total_price = None
         for item in response:
             if 'img_id' in item and item['img_id'] == img_id:
-                receipt_id = item['id']
-                new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
-                            'price': {'S': request.form.get('price.' + receipt_id)},
-                            'id': {"S": receipt_id},
-                            'img_id': {'S': item['img_id']}}
-                dynamodb.put_item(
-                    TableName='Receipts',
-                    Item=new_item
-                )
+                if item['item_name'] != 'TotalPrice':
+                    receipt_id = item['id']
+                    total += float(item['price'])
+                    new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
+                                'price': {'S': request.form.get('price.' + receipt_id)},
+                                'id': {"S": receipt_id},
+                                'img_id': {'S': item['img_id']}}
+                    dynamodb.put_item(
+                        TableName='Receipts',
+                        Item=new_item
+                    )
+                else:
+                    total_price = item
+        receipt_id = total_price['id']
+        new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
+                    'price': {'S': str(total)},
+                    'id': {"S": receipt_id},
+                    'img_id': {'S': total_price['img_id']}}
+        dynamodb.put_item(
+            TableName='Receipts',
+            Item=new_item
+        )
         img_name = dynamodb.get_item(TableName='images', Key={'image_id': {'N': img_id}})["Item"]['name']['S']
         return redirect(url_for('receipt_detail', img_name=img_name))
 
+
 @app.route('/delete')
 def delete():
-
     pass

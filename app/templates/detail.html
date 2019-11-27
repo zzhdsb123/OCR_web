@@ -11,6 +11,12 @@
         Price: <input type="text" name="price.{{ id }}" value="{{ info.price }}">
         <br>
     {% endfor %}
+    <br>
+    {% for id, info in total_price.items() %}
+        Item: <input type="text" name="item.{{ id }}" value="{{ info.item_name }}" readonly>
+        Price: <input type="text" name="price.{{ id }}" value="{{ info.price }}", readonly>
+        <br>
+    {% endfor %}
 <input type="submit" value="Submit">
 </form>
 </body>
