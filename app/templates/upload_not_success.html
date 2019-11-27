@@ -1,0 +1,101 @@
+{% extends 'after_login_base.html' %}
+
+{% block title %}Upload{% endblock %}
+
+{% block main %}
+
+    <h3 class="page-title">Hello! {{ user }}</h3>
+    <br>
+    <div class="button2">
+        <div class="custom-file">
+            {% if errorcode==1 %}
+
+                <form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST">
+
+                    <input type="file" class="custom-file-input is-invalid" id="customFile" name="file">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <div class="invalid-feedback">
+                        Please choose a file
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Upload Photo</button>
+                </form>
+                <script>
+                    $('#customFile').on('change', function () {
+                        //get the file name
+                        var fileName = $(this).val();
+                        //replace the "Choose a file" label
+                        $(this).next('.custom-file-label').html(fileName);
+                    })
+                </script>
+            {% elif errorcode==2 %}
+                <form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST">
+
+                    <input type="file" class="custom-file-input is-invalid" id="customFile" name="file">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <div class="invalid-feedback">
+                        Pleas upload a .png, .jpg, .jpeg or .fig file
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Upload Photo</button>
+                </form>
+                <script>
+                    $('#customFile').on('change', function () {
+                        //get the file name
+                        var fileName = $(this).val();
+                        //replace the "Choose a file" label
+                        $(this).next('.custom-file-label').html(fileName);
+                    })
+                </script>
+            {% elif errorcode==3 %}
+                <form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST">
+
+                    <input type="file" class="custom-file-input is-invalid" id="customFile" name="file">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <div class="invalid-feedback">
+                        File size needs to be smaller than 10mb
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Upload Photo</button>
+                </form>
+                <script>
+                    $('#customFile').on('change', function () {
+                        //get the file name
+                        var fileName = $(this).val();
+                        //replace the "Choose a file" label
+                        $(this).next('.custom-file-label').html(fileName);
+                    })
+                </script>
+            {% else %}
+                <form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST">
+
+                    <input type="file" class="custom-file-input" id="customFile" name="file">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                    <br>
+                    <br>
+                    <button type="submit" class="btn btn-primary btn-block">Upload Photo</button>
+
+                </form>
+                <script>
+                    $('#customFile').on('change', function () {
+                        //get the file name
+                        var fileName = $(this).val();
+                        //replace the "Choose a file" label
+                        $(this).next('.custom-file-label').html(fileName);
+                    })
+                </script>
+            {% endif %}
+
+        </div>
+        <br>
+        <br>
+        <div class="button2">
+
+            <a href="{{ url_for('preview') }}" class="button">
+                <button type="button" class="btn btn-primary btn-block">View uploaded images</button>
+            </a>
+        </div>
+
+
+    </div>
+
+    <br>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'after_login_base.html'%}
+
+{% block title%}Prereview{%endblock%}
+
+{%block main%}
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            {% for hist, name in hists.items() %}
+            {% if hist != '.DS_Store' %}
+
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <a href="{{ url_for('receipt_detail', img_name=name.0) }}">
+                        <img class="bd-placeholder-img card-img-top" width="100%" height="225"
+                             src="{{ hist }}"
+                             preserveAspectRatio="xMidYMid slice" focusable="false" role="img"
+                             aria-label="Placeholder: Thumbnail" alt="{{hist}}">
+                    </a>
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#55595c"></rect>
+                    </img>
+                    <div class="card-body">
+                        <p class="card-text">{{ name.1 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="{{ url_for('receipt_detail', img_name=name.0) }}">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">Detail</button>
+                                </a>
+                                <a href="{{ url_for('delete', img_name=name.0) }}">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">Delete</button>
+                                </a>
+                                <!--<button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% endif %}
+            <!--</a>-->
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+
+<div class="button-list">
+    <div class="btn-group-vertical">
+        <br>
+        <a href="{{ url_for('user') }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">Back</button>
+        </a>
+    </div>
+</div>
+{%endblock%}

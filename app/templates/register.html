@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block main %}
+
+    <form action={{ url_for('register') }} method="post" class="loginform">
+        <h3 class="page-title">Sign Up</h3>
+
+        {% if username_valid ==0 %}
+            <div class="form-group">
+                <label for="validationServerUsername">Username</label>
+                <div class="input-group">
+                    <input type="text" class="form-control is-valid" id="validationServerUsername" value={{ username }}
+                            aria-describedby="inputGroupPrepend3" name="username" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                </div>
+
+            </div>
+        {% elif username_valid ==1 %}
+            <div class="form-group">
+                <label for="validationServerUsername1">Username</label>
+                <div class="input-group">
+                    <input type="text" class="form-control is-invalid" id="validationServerUsername1"
+                           placeholder="Username"
+                           aria-describedby="inputGroupPrepend3" name="username" required>
+                    <div class="invalid-feedback">
+                        Invalid Username.
+                    </div>
+                </div>
+            </div>
+        {% elif username_valid ==2 %}
+            <div class="form-group">
+                <label for="validationServerUsername2">Username</label>
+                <div class="input-group">
+                    <input type="text" class="form-control is-invalid" id="validationServerUsername2"
+                           placeholder="Username"
+                           aria-describedby="inputGroupPrepend3" name="username" required>
+                    <div class="invalid-feedback">
+                        Username already exists.
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="form-group">
+                <label for="validationServerUsername0">Username</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="validationServerUsername0" placeholder="Username"
+                           aria-describedby="inputGroupPrepend3" name="username" required>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if password_valid==2 %}
+            <div class="form-group">
+                <label for="validationServer02">Password</label>
+                <input type="password" class="form-control is-invalid" id="validationServer02" placeholder="Password"
+                       name="password" required>
+                <div class="invalid-feedback">
+                    Password too long or too short.
+                </div>
+            </div>
+        {% elif password_valid ==1 %}
+             <div class="form-group">
+                <label for="validationServer02">Password</label>
+                <input type="password" class="form-control is-invalid" id="validationServer02" placeholder="Password"
+                       name="password" required>
+                <div class="invalid-feedback">
+                    Password does not match.
+                </div>
+            </div>
+
+        {% else %}
+            <div class="form-group">
+                <label for="validationServer01">Password</label>
+                <input type="password" class="form-control" id="validationServer01" placeholder="Password"
+                       name="password"
+                       required>
+            </div>
+
+        {% endif %}
+        <!--</div>-->
+        <!--<div class="form-row">-->
+        {% if pawconfirm_valid==1 %}
+            <div class="form-group">
+                <label for="validationServer03">Reenter Password</label>
+                <input type="password" class="form-control is-invalid" id="validationServer03" placeholder="Password"
+                       name="confirm_password" required>
+                <div class="invalid-feedback">
+                    Passwords do not match!
+                </div>
+            </div>
+        {% else %}
+            <div class="form-group">
+                <label for="validationServer04">Reenter Password</label>
+                <input type="password" class="form-control" id="validationServer04" placeholder="Password"
+                       name="confirm_password" required>
+
+            </div>
+        {% endif %}
+
+
+        <button class="btn btn-primary btn-block" type="submit">Sign me up!</button>
+    </form>
+{% endblock %}

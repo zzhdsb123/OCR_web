@@ -1,0 +1,54 @@
+.base{
+   background-size:cover;
+   background-attachment:fixed;
+   background-color:#CCCCCC;
+}
+
+.main{
+    background: #fff;
+    opacity:0.8;
+    filter:alpha(opacity=40);
+    width:730px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.mainforFullView{
+    background: #fff;
+    opacity:0.8;
+    filter:alpha(opacity=40);
+    width:1030px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 10px;
+}
+
+.loginform{
+    width: 300px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+/*.base{*/
+    /*background: #f3f3f3;*/
+/*}*/
+
+.page-title{
+    text-align: center;
+}
+
+.button-list{
+    text-align: center;
+    margin: 0 auto;
+}
+
+.button{
+    text-align: center;
+    margin: 0 auto;
+    width: 250px;
+}
+
+.bd-placeholder-img{
+    opacity:1;
+}

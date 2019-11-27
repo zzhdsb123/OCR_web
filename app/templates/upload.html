@@ -1,0 +1,47 @@
+{% extends 'after_login_base.html'%}
+
+{% block title%}Upload{%endblock%}
+
+{%block main%}
+
+<h3 class="page-title">Hello! {{user}}</h3>
+<br>
+<div class="button2">
+    <div class="custom-file">
+
+        <form action="{{ url_for('upload') }}" enctype="multipart/form-data" method="POST">
+
+            <input type="file" class="custom-file-input" id="customFile" name="file" required>
+            <label class="custom-file-label" for="customFile">Choose file</label>
+            <!--<input type="file" name="file"><br>-->
+            <!--<input type="submit">-->
+            <br>
+            <br>
+            <button type="submit" class="btn btn-primary btn-block">Upload Photo</button>
+
+        </form>
+        <script>
+            $('#customFile').on('change', function () {
+                //get the file name
+                var fileName = $(this).val();
+                //replace the "Choose a file" label
+                $(this).next('.custom-file-label').html(fileName);
+            })
+        </script>
+
+    </div>
+    <br>
+    <br>
+    <div class="button2">
+
+        <a href="{{ url_for('preview') }}" class="button">
+            <button type="button" class="btn btn-primary btn-block">View uploaded images</button>
+        </a>
+    </div>
+
+
+</div>
+
+<br>
+
+{%endblock%}

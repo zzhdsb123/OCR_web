@@ -1,0 +1,52 @@
+{% extends 'base.html'%}
+
+{% block title%}Log in{%endblock%}
+
+
+{%block main%}
+
+<form action="{{ url_for('login') }}" method="post" class="loginform">
+    <h3 class="page-title">Login</h3>
+    {%if p%}
+    <div class="form-group">
+        <div class="input-group">
+            <input type="text" class="form-control is-invalid" id="validationServerUsername1" placeholder="Username"
+                   aria-describedby="inputGroupPrepend3" name="username" required>
+            <div class="invalid-feedback">
+                Invalid username or password.
+            </div>
+        </div>
+    </div>
+    {%else%}
+    <div class="form-group">
+        <!--<label for="exampleInputEmail1">Email address/User name</label>-->
+        <input type="text" class="form-control" id="exampleInputEmail1"
+               placeholder="Enter email/username" name="username">
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    {%endif%}
+
+    {%if p%}
+    <div class="form-group">
+        <div class="input-group">
+            <input type="password" class="form-control is-invalid" id="validationServerpassword" placeholder="Password"
+                   aria-describedby="inputGroupPrepend3" name="password" required>
+            <div class="invalid-feedback">
+                Invalid username or password.
+            </div>
+        </div>
+    </div>
+    {%else%}
+    <div class="form-group">
+        <!--<label for="exampleInputPassword1">Password</label>-->
+        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password">
+    </div>
+    {%endif%}
+
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+        <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+    </div>
+    <button type="submit" class="btn btn-block btn-primary" value="login">Log in!</button>
+</form>
+{%endblock%}
