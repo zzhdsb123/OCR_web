@@ -218,47 +218,19 @@ def receipt_detail(img_name):
         return redirect(url_for('index'))
     rd = receipt_detail_maker(img_name)
     context = rd.get_form()
-    if not context['cols']:
+    if not context:
         return render_template('not_ready.html', img_name=img_name)
     return render_template('detail.html', **context)
+
 
 @app.route('/modify/<img_id>', methods=['GET', 'POST'])
 def modify(img_id):
     if 'user' not in session:
         return redirect(url_for('index'))
     if request.method == 'POST':
-        table = boto3.resource('dynamodb').Table('Receipts')
-        response = table.scan()['Items']
-        dynamodb = boto3.client('dynamodb')
-        # total = 0
-        total_price = None
-        for item in response:
-            if 'img_id' in item and item['img_id'] == img_id:
-                if item['item_name'] != 'TotalPrice':
-                    col_id = item['id']
-                    new_item = {'item_name': {'S': request.form.get('item_name.' + col_id)},
-                                'price': {'S': request.form.get('price.' + col_id)},
-                                'id': {"S": col_id},
-                                'img_id': {'S': item['img_id']}}
-                    dynamodb.put_item(
-                        TableName='Receipts',
-                        Item=new_item
-                    )
-                else:
-                    col_id = item['id']
-                    new_item = {'item_name': {'S': item['item_name']},
-                                'price': {'S': request.form.get('total_price.' + col_id)},
-                                'id': {"S": col_id},
-                                'img_id': {'S': item['img_id']}}
-                    print(new_item)
-                    dynamodb.put_item(
-                        TableName='Receipts',
-                        Item=new_item
-                    )
-        img_name = dynamodb.get_item(TableName='images', Key={'image_id': {'N': img_id}})["Item"]['name']['S']
-        # response = dynamodb.get_item(TableName='Receipts', Key={'id': {'S': receipt_id}})["Item"]
-        # return response
-        return redirect(url_for('receipt_detail', img_name=img_name))
+        editor = Receipts_tool()
+        editor.edit_from_submit(form=request.form, img_id=img_id)
+        return redirect(url_for('preview'))
 
 
 @app.route('/delete/<img_id>/<img_name>')

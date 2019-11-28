@@ -1,51 +1,63 @@
-{% extends 'after_login_base.html' %}
+{% extends 'detail_base.html' %}
 
 {% block title %}Details{% endblock %}
 
 {% block main %}
-
-    <form action="{{ url_for('modify',img_id=img_id) }}" method="post">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th scope="col">Item</th>
-                <th scope="col">Price</th>
-                <th scope="col">Type</th>
-
-
-            </tr>
-            </thead>
-            <tbody>
-            {% for col in cols %}
+    <div class="leftp">
+        <img src="{{ img_url }}" alt="" width="650px" height="100%">
+    </div>
+    <div class="rightp">
+        <form action="{{ url_for('modify',img_id=img_id) }}" method="post">
+            <table class="table table-striped">
+                <thead>
                 <tr>
-                    <th scope="row">
-                        <input type="text" class="form-control"
-                               value="{{ col.item_name }}"
-                               name="item_name.{{ col.id }}">
-                    </th>
-                    <td>
-                        <input type="text" class="form-control"
-                               value="{{ col.price }}"
-                               name="price.{{ col.id }}">
-                    </td>
+                    <th scope="col">Item</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Type</th>
 
-                    <td>
-                        <select class="custom-select selectwidthauto" name="item_tag/{{ col.id }}">
-                            {% for tag in item_type_list %}
-                                <option value="{{ col.item_tag }}">{{ tag }}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
+
                 </tr>
-            {% endfor %}
+                </thead>
+                <tbody>
+                {% for col in cols %}
+                    <tr>
+                        <th scope="row">
+                            <input type="text" class="form-control"
+                                   value="{{ col.item_name }}"
+                                   name="item_name/{{ col.id }}">
+                        </th>
+                        <td>
+                            <input type="text" class="form-control"
+                                   value="{{ col.price }}"
+                                   name="price/{{ col.id }}">
+                        </td>
+
+                        <td>
+                            <select class="custom-select selectwidthauto" name="item_tag/{{ col.id }}">
+                                <option selected value="{{ col.item_tag }}">{{ col.item_tag }}</option>
+                                {% for tag in item_type_list %}
+                                    <option value="{{ tag }}">{{ tag }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
 
 
-            </tbody>
-        </table>
-        <p>Total Price :<input type="text" class="form-control"
-                              value="{{ total_price }}"
-                              name="total_price.{{ total_price_id }}">
-        </p>
-        <button type="submit" class="btn btn-block btn-primary" value="Submit">Submit</button>
-    </form>
+                </tbody>
+            </table>
+            <p>Total Price :<input type="text" class="form-control"
+                                   value="{{ total_price }}"
+                                   name="total_price/{{ total_price_id }}">
+            </p>
+            <button type="submit" class="btn btn-block btn-primary" value="Submit">Submit</button>
+        </form>
+    </div>
+    <br><br><br><br><br>
+        <div class="btn-group-vertical" style="position: center">
+            <br>
+            <a href="{{ url_for('preview') }}" class="button">
+                <button type="button" class="btn btn-primary btn-block">Back</button>
+            </a>
+        </div>
 {% endblock %}
