@@ -240,7 +240,6 @@ def modify(img_id):
                                 'price': {'S': request.form.get('price.' + col_id)},
                                 'id': {"S": col_id},
                                 'img_id': {'S': item['img_id']}}
-                    print(new_item)
                     dynamodb.put_item(
                         TableName='Receipts',
                         Item=new_item
@@ -251,6 +250,7 @@ def modify(img_id):
                                 'price': {'S': request.form.get('total_price.' + col_id)},
                                 'id': {"S": col_id},
                                 'img_id': {'S': item['img_id']}}
+                    print(new_item)
                     dynamodb.put_item(
                         TableName='Receipts',
                         Item=new_item
