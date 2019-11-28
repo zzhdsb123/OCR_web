@@ -6,6 +6,6 @@
         "project_name": "ocr-web",
         "runtime": "python3.7",
         "s3_bucket": "zappa-o5wb1xlcm",
-        "slim_handler": false
+        "slim_handler": true
     }
 }

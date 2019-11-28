@@ -1,0 +1,16 @@
+{% extends 'after_login_base.html'%}
+
+{% block title%}Receipt not ready{%endblock%}
+
+{%block main%}
+<h3 class="page-title">Not ready yet!</h3>
+<br>
+<div class="button-list">
+    <div class="btn-group-vertical">
+        <a href="{{ url_for('receipt_detail', img_name=img_name) }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">Try Again</button>
+        </a>
+    </div>
+</div>
+<br>
+{%endblock%}

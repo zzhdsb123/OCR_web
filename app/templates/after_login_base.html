@@ -28,11 +28,9 @@ body {
 }
 </style>
 <body class="base">
-
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">
         <span class="glyphicon glyphicon-camera"> </span>
-
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,15 +47,12 @@ body {
             <li class="nav-item">
                 <a class="nav-link" href={{ url_for('logout') }}>Log out</a>
             </li>
-
         </ul>
     </div>
 </nav>
-
 <div class="main">
+    <h3>{{ msg }}</h3>
     {% block main %}{% endblock %}
 </div>
-
-
 </body>
 </html>
