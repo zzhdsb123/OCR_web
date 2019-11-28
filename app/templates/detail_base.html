@@ -20,12 +20,12 @@
     <title>{% block title %} {% endblock %} - Text Detector</title>
 </head>
 <style>
-body {
-  background-image: url({{ url_for('static', filename='background.jpg') }});
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-}
+    body {
+        background-image: url({{ url_for('static', filename='background.jpg') }});
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
 </style>
 <body class="base">
 
@@ -55,6 +55,7 @@ body {
 </nav>
 
 <div class="detailmain">
+    <h3>{{ msg }}</h3>
     {% block main %}{% endblock %}
 </div>
 

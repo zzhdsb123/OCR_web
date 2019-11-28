@@ -25,6 +25,15 @@ class receipt_detail_maker:
             ReturnValues="UPDATED_NEW"
         )
         return str(item_id)
+    def __get_img_sta(self,img_id):
+        dynamodb = boto3.resource('dynamodb')
+        table = dynamodb.Table('img_stat')
+        response = table.query(
+            KeyConditionExpression=Key('id').eq(img_id)
+        )
+        sta=str(response['Items'][0]['status'])
+        print(sta)
+        return sta=='0'
 
     def get_form(self):
         img_name = self.ImgnName
@@ -34,6 +43,9 @@ class receipt_detail_maker:
                                                     'Key': 'ocr/' + img_name,
                                                     })
         img_id, ext = img_name.rsplit(".", 1)
+        if self.__get_img_sta(img_id):
+            print('onsao')
+            return {'status':'0'}
         table = boto3.resource('dynamodb').Table('Receipts')
         response = table.scan()['Items']
 
@@ -78,6 +90,7 @@ class receipt_detail_maker:
 
         item_type_list=['Food','Sports','Games']
         response={
+            'status':'1',
             'cols':cols,
             'total_price_id':total_price_id,
             'total_price':total_price,

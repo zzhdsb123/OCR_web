@@ -190,6 +190,9 @@ def logout():
 def preview():
     if 'user' not in session:
         return redirect(url_for('index'))
+    msg=request.args.get('msg')
+    if not msg:
+        msg=''
     username = session['user']
     table = boto3.resource('dynamodb').Table('images')
     response = table.scan()['Items']
@@ -206,7 +209,7 @@ def preview():
                                                 'Key': 'ocr/' + image,
                                                 })
         hists[url] = (image, item[1])
-    return render_template('preview.html', hists=hists)
+    return render_template('preview.html', hists=hists,msg=msg)
 
 
 @app.route('/receipt_detail/<img_name>', methods=['GET', 'POST'])
@@ -215,6 +218,8 @@ def receipt_detail(img_name):
         return redirect(url_for('index'))
     rd=receipt_detail_maker(img_name)
     context=rd.get_form()
+    if context['status']=='0':
+        return redirect(url_for('preview',msg='Image is still in processing'))
     return render_template('detail.html', **context)
 
 
