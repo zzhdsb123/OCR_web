@@ -227,6 +227,9 @@ def modify(img_id):
         editor.edit_from_submit(form=request.form,img_id=img_id)
         return redirect(url_for('preview'))
 
+@app.route('/test')
+def ddd():
+    pass
 
 @app.route('/delete')
 def delete():

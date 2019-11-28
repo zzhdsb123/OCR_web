@@ -95,6 +95,7 @@ class dynamodb_tool:
 class Receipts_tool(dynamodb_tool):
     def __init__(self):
         super().__init__()
+        pass
 
     def edit_from_submit(self,form,img_id):
         print(form)
