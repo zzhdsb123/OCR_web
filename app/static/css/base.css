@@ -1,7 +1,7 @@
 .base{
-   background-size:cover;
-   background-attachment:fixed;
-   background-color:#CCCCCC;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .main{
@@ -51,4 +51,22 @@
 
 .bd-placeholder-img{
     opacity:1;
+}
+
+.detailmain{
+    background: #fff;
+    opacity:0.8;
+    filter:alpha(opacity=40);
+    width:1400px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 10px;
+}
+.leftp{
+    float: left;
+    width: 700px;
+}
+.rightp{
+    margin-left:700px;
+    width: 650px;
 }

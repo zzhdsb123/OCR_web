@@ -1,5 +1,6 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
+from flask import request
 
 class receipt_detail_maker:
     def __init__(self, ImgnName):
@@ -27,7 +28,11 @@ class receipt_detail_maker:
 
     def get_form(self):
         img_name = self.ImgnName
-
+        s3 = boto3.client('s3')
+        img_url = s3.generate_presigned_url('get_object',
+                                            Params={'Bucket': 'chaoshuai',
+                                                    'Key': 'ocr/' + img_name,
+                                                    })
         img_id, ext = img_name.rsplit(".", 1)
         table = boto3.resource('dynamodb').Table('Receipts')
         response = table.scan()['Items']
@@ -43,7 +48,8 @@ class receipt_detail_maker:
                         'id':item['id'],
                         'img_id': item['img_id'],
                         'item_name': item['item_name'],
-                        'price': item['price']
+                        'price': item['price'],
+                        'item_tag':item['item_tag']
                     }
                     cols.append(col)
                 else:
@@ -70,12 +76,64 @@ class receipt_detail_maker:
                 }
             )
 
-        item_type_list=[" ",'Food','Sports','Games']
+        item_type_list=['Food','Sports','Games']
         response={
             'cols':cols,
             'total_price_id':total_price_id,
             'total_price':total_price,
             'item_type_list':item_type_list,
             'img_id':img_id,
+            'img_url':img_url,
         }
         return response
+
+class dynamodb_tool:
+    def __init__(self):
+        dynamodb = boto3.resource('dynamodb')
+        self.ReceiptsTable = dynamodb.Table('Receipts')
+
+class Receipts_tool(dynamodb_tool):
+    def __init__(self):
+        super().__init__()
+
+    def edit_from_submit(self,form,img_id):
+        print(form)
+        items={}
+        table=self.ReceiptsTable
+        for key,value in form.items():
+            id=key.split('/')[1]
+            keyi=key.split('/')[0]
+            if not value:
+                value=' '
+            if keyi=='total_price':
+                items[id] = {}
+                items[id]['item_name'] = 'TotalPrice'
+                items[id]['img_id'] = img_id
+                items[id]['price'] = str(value)
+                items[id]['item_tag'] = ' '
+            else:
+                if items.get(id):
+                    items[id][keyi]=str(value)
+                    items[id]['img_id']=img_id
+                else:
+                    items[id]={}
+                    items[id][keyi] = str(value)
+                    items[id]['img_id'] = img_id
+
+        for key, value in items.items():
+            id=key
+            print(value)
+            response = table.update_item(
+                Key={
+                    'id': id,
+                },
+                UpdateExpression="set item_name=:in, price=:p, item_tag=:it",
+                ExpressionAttributeValues={
+                    ':in': value['item_name'],
+                    ':p': value['price'],
+                    ':it': value['item_tag'],
+                },
+                ReturnValues="UPDATED_NEW"
+            )
+
+

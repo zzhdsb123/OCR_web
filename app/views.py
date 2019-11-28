@@ -223,39 +223,9 @@ def modify(img_id):
     if 'user' not in session:
         return redirect(url_for('index'))
     if request.method == 'POST':
-        table = boto3.resource('dynamodb').Table('Receipts')
-        response = table.scan()['Items']
-        dynamodb = boto3.client('dynamodb')
-        total = 0
-        total_price = None
-        for item in response:
-            if 'img_id' in item and item['img_id'] == img_id:
-                if item['item_name'] != 'TotalPrice':
-                    receipt_id = item['id']
-                    total += float(request.form.get('price.' + receipt_id))
-                    new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
-                                'price': {'S': request.form.get('price.' + receipt_id)},
-                                'id': {"S": receipt_id},
-                                'img_id': {'S': item['img_id']}}
-                    dynamodb.put_item(
-                        TableName='Receipts',
-                        Item=new_item
-                    )
-                else:
-                    total_price = item
-        receipt_id = total_price['id']
-        new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
-                    'price': {'S': request.form.get('price.' + receipt_id)},
-                    'id': {"S": receipt_id},
-                    'img_id': {'S': total_price['img_id']}}
-        dynamodb.put_item(
-            TableName='Receipts',
-            Item=new_item
-        )
-        img_name = dynamodb.get_item(TableName='images', Key={'image_id': {'N': img_id}})["Item"]['name']['S']
-        # response = dynamodb.get_item(TableName='Receipts', Key={'id': {'S': receipt_id}})["Item"]
-        # return response
-        return redirect(url_for('receipt_detail', img_name=img_name))
+        editor=Receipts_tool()
+        editor.edit_from_submit(form=request.form,img_id=img_id)
+        return redirect(url_for('preview'))
 
 
 @app.route('/delete')
