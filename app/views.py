@@ -7,7 +7,9 @@ from werkzeug.utils import secure_filename
 from datetime import timedelta
 import datetime
 import os
-from time import sleep
+from app.helper import *
+from boto3.dynamodb.conditions import Key
+
 
 # the following four image extensions are allowed
 app.config["allowed_img"] = ["png", "jpg", "jpeg", "fig"]
@@ -106,6 +108,7 @@ def register():
         )
 
         session['user'] = username
+        return render_template('user.html')
 
     context = {
         'username_valid': -1,
@@ -213,32 +216,11 @@ def preview():
 def receipt_detail(img_name):
     if 'user' not in session:
         return redirect(url_for('index'))
-    img_id, ext = img_name.rsplit(".", 1)
-    table = boto3.resource('dynamodb').Table('Receipts')
-    response = table.scan()['Items']
-    hists = {}
-    for item in response:
-        if 'img_id' in item and item['img_id'] == img_id:
-            if item['item_name'] != 'TotalPrice':
-                info = {'img_id': item['img_id'],
-                        'item_name': item['item_name'],
-                        'price': item['price']
-                        }
-                item_id = item['id']
-                hists[item_id] = info
-            else:
-                info = {'img_id': item['img_id'],
-                        'item_name': item['item_name'],
-                        'price': item['price']
-                        }
-                item_id = item['id']
-                total_price = {item_id: info}
-    try:
-        total_price
-    except UnboundLocalError:
+    rd = receipt_detail_maker(img_name)
+    context = rd.get_form()
+    if not context['cols']:
         return render_template('not_ready.html', img_name=img_name)
-    return render_template('detail.html', hists=hists, img_id=img_id, total_price=total_price)
-
+    return render_template('detail.html', **context)
 
 @app.route('/modify/<img_id>', methods=['GET', 'POST'])
 def modify(img_id):
@@ -248,32 +230,31 @@ def modify(img_id):
         table = boto3.resource('dynamodb').Table('Receipts')
         response = table.scan()['Items']
         dynamodb = boto3.client('dynamodb')
-        total = 0
+        # total = 0
         total_price = None
         for item in response:
             if 'img_id' in item and item['img_id'] == img_id:
                 if item['item_name'] != 'TotalPrice':
-                    receipt_id = item['id']
-                    total += float(request.form.get('price.' + receipt_id))
-                    new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
-                                'price': {'S': request.form.get('price.' + receipt_id)},
-                                'id': {"S": receipt_id},
+                    col_id = item['id']
+                    new_item = {'item_name': {'S': request.form.get('item_name.' + col_id)},
+                                'price': {'S': request.form.get('price.' + col_id)},
+                                'id': {"S": col_id},
                                 'img_id': {'S': item['img_id']}}
+                    print(new_item)
                     dynamodb.put_item(
                         TableName='Receipts',
                         Item=new_item
                     )
                 else:
-                    total_price = item
-        receipt_id = total_price['id']
-        new_item = {'item_name': {'S': request.form.get('item.' + receipt_id)},
-                    'price': {'S': request.form.get('price.' + receipt_id)},
-                    'id': {"S": receipt_id},
-                    'img_id': {'S': total_price['img_id']}}
-        dynamodb.put_item(
-            TableName='Receipts',
-            Item=new_item
-        )
+                    col_id = item['id']
+                    new_item = {'item_name': {'S': item['item_name']},
+                                'price': {'S': request.form.get('total_price.' + col_id)},
+                                'id': {"S": col_id},
+                                'img_id': {'S': item['img_id']}}
+                    dynamodb.put_item(
+                        TableName='Receipts',
+                        Item=new_item
+                    )
         img_name = dynamodb.get_item(TableName='images', Key={'image_id': {'N': img_id}})["Item"]['name']['S']
         # response = dynamodb.get_item(TableName='Receipts', Key={'id': {'S': receipt_id}})["Item"]
         # return response

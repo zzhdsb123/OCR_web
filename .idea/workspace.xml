@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="061aa26a-54ee-436b-b32c-7b67cdf9a9c7" name="Default Changelist" comment="Merge branch 'master' of https://github.com/zzhdsb123/OCR_web&#10;&#10;# Conflicts:&#10;#&#9;app/views.py">
+    <list default="true" id="061aa26a-54ee-436b-b32c-7b67cdf9a9c7" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/helper.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/helper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -139,7 +141,7 @@
       <workItem from="1574824521891" duration="870000" />
       <workItem from="1574833095966" duration="2079000" />
       <workItem from="1574881744782" duration="3473000" />
-      <workItem from="1574885771549" duration="8563000" />
+      <workItem from="1574885771549" duration="11302000" />
     </task>
     <task id="LOCAL-00001" summary="4.40">
       <created>1574890856260</created>
@@ -176,7 +178,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574896243115</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Merge branch 'master' of https://github.com/zzhdsb123/OCR_web&#10;&#10;# Conflicts:&#10;#&#9;app/views.py">
+      <created>1574896883745</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1574896883745</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,10 +220,11 @@
     <MESSAGE value="4.45" />
     <MESSAGE value="4.52" />
     <MESSAGE value="6.10" />
-    <option name="LAST_COMMIT_MESSAGE" value="6.10" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/zzhdsb123/OCR_web&#10;&#10;# Conflicts:&#10;#&#9;app/views.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/zzhdsb123/OCR_web&#10;&#10;# Conflicts:&#10;#&#9;app/views.py" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/OCR_web$create_table.coverage" NAME="create_table Coverage Results" MODIFIED="1574812979810" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/OCR_web$run.coverage" NAME="run Coverage Results" MODIFIED="1574896419399" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/OCR_web$run.coverage" NAME="run Coverage Results" MODIFIED="1574898787566" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

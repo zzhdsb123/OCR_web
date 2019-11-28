@@ -21,12 +21,12 @@
                     <th scope="row">
                         <input type="text" class="form-control"
                                value="{{ col.item_name }}"
-                               name="item_name/{{ col.id }}">
+                               name="item_name.{{ col.id }}">
                     </th>
                     <td>
                         <input type="text" class="form-control"
                                value="{{ col.price }}"
-                               name="price/{{ col.id }}">
+                               name="price.{{ col.id }}">
                     </td>
 
                     <td>
@@ -44,7 +44,7 @@
         </table>
         <p>Total Price :<input type="text" class="form-control"
                               value="{{ total_price }}"
-                              name="total_price/{{ total_price_id }}">
+                              name="total_price.{{ total_price_id }}">
         </p>
         <button type="submit" class="btn btn-block btn-primary" value="Submit">Submit</button>
     </form>

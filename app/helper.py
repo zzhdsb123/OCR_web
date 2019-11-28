@@ -1,6 +1,7 @@
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 
+
 class receipt_detail_maker:
     def __init__(self, ImgnName):
         self.ImgnName = ImgnName
@@ -33,24 +34,24 @@ class receipt_detail_maker:
         response = table.scan()['Items']
 
         cols = []
-        flag=True
+        flag = True
 
         for item in response:
 
             if 'img_id' in item and item['img_id'] == img_id:
                 if item['item_name'] != 'TotalPrice':
                     col = {
-                        'id':item['id'],
+                        'id': item['id'],
                         'img_id': item['img_id'],
                         'item_name': item['item_name'],
                         'price': item['price']
                     }
                     cols.append(col)
                 else:
-                    flag=False
-                    total_price_id=item['id']
-                    total_price=item['price']
-            cols=sorted(cols,key=lambda x:x['id'])
+                    flag = False
+                    total_price_id = item['id']
+                    total_price = item['price']
+            cols = sorted(cols, key=lambda x: x['id'])
 
             # No total price
             # Create one
@@ -70,12 +71,12 @@ class receipt_detail_maker:
                 }
             )
 
-        item_type_list=[" ",'Food','Sports','Games']
-        response={
-            'cols':cols,
-            'total_price_id':total_price_id,
-            'total_price':total_price,
-            'item_type_list':item_type_list,
-            'img_id':img_id,
+        item_type_list = [" ", 'Food', 'Sports', 'Games']
+        response = {
+            'cols': cols,
+            'total_price_id': total_price_id,
+            'total_price': total_price,
+            'item_type_list': item_type_list,
+            'img_id': img_id,
         }
         return response
