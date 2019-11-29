@@ -34,6 +34,14 @@
 
         </div>
     </div>
+<br>
+    <div class="button-list">
+    <div class="btn-group-vertical">
+        <a href="{{ url_for('user') }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">Back</button>
+        </a>
+    </div>
+</div>
 
 
 
@@ -66,7 +74,7 @@
             };
             var series = [{
                 type: 'pie',
-                name: 'Browser share',
+                name: 'Cost',
                 data: [
 
                     {% for datai in datas %}
