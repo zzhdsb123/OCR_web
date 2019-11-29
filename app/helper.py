@@ -88,7 +88,9 @@ class receipt_detail_maker:
                 }
             )
 
-        item_type_list=['Food','Sports','Games']
+        item_type_list=['Food','Sports','Entertainment ','Housing','Transportation','Insurance','Medical & Healthcare','Utilities','Clothing','Education']
+
+
         response={
             'status':'1',
             'cols':cols,
