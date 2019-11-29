@@ -1,0 +1,42 @@
+{% extends 'detail_base.html' %}
+
+{% block title %}Details{% endblock %}
+
+{% block main %}
+    <div class="leftp">
+
+    </div>
+    <div class="rightp">
+        <form action="{{ url_for('month_select') }}" method="post">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">Total_price</th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for hist, name in report.items() %}
+                    <tr>
+                        <th scope="row">
+                            {{ hist }}
+                        </th>
+                        <th>
+                            <input type="text" class="form-control"
+                                   value="{{ name }}"
+                                   name="hist"
+                            readonly>
+                        </th>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn btn-block btn-primary" value="Submit">Back</button>
+        </form>
+    </div>
+{% endblock %}

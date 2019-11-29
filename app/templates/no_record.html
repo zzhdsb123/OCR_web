@@ -1,0 +1,14 @@
+{% extends 'after_login_base.html'%}
+
+{%block main%}
+<h3 class="page-title">No record found!</h3>
+<br>
+<div class="button-list">
+    <div class="btn-group-vertical">
+        <a href="{{ url_for('month_select') }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">Back</button>
+        </a>
+    </div>
+</div>
+<br>
+{%endblock%}
