@@ -231,3 +231,7 @@ def modify(img_id):
 @app.route('/delete')
 def delete():
     pass
+
+@app.route('/test')
+def chart():
+    return render_template('bill_chart.html')
