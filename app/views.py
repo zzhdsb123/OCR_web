@@ -275,37 +275,24 @@ def month_select():
     return render_template('select_month.html', month=month)
 
 
-@app.route('/report/month_detail/<year>/<month>')
-def month_report(year, month):
+@app.route('/report/month_detail/')
+def month_report():
     if 'user' not in session:
         return redirect(url_for('index'))
-    year, month = str(year), str(month)
+    year=request.args.get('year')
+    month=request.args.get('month')
+    if not year:
+        year=str(datetime.datetime.now().year)
+        month=str(datetime.datetime.now().month)
     username = session['user']
-    table = boto3.resource('dynamodb').Table('images')
-    response = table.scan()['Items']
-    images = []
-    for i in response:
-        if 'user' in i and i['user'] == username and i['year'] == year and i['month'] == month:
-            images.append(str(i['image_id']))
-    if not images:
-        return render_template('no_record.html', year=year, month=month)
-
-    report = {"Sports": 0,
-              "Food": 0,
-              "Games": 0,
-              "Other": 0}
-
-    table = boto3.resource('dynamodb').Table('Receipts')
-    response = table.scan()['Items']
-    for i in response:
-        if 'img_id' in i and i['img_id'] in images and \
-                i['item_name'] != 'TotalPrice' and i['item_name'] != 'Saving' and\
-                i['item_name'] != 'hst':
-            if i['item_tag'] == " ":
-                report['Other'] += float(i['price'])
-            else:
-                item_tag = i['item_tag']
-                report[item_tag] += float(i['price'])
-    for i in report:
-        report[i] = "%.2f" % report[i]
-    return render_template('month_report.html', report=report)
+    cl=chart_tool()
+    datas=cl.get_data_by_mounth(username,year,month)
+    context={
+        'datas':datas,
+        'present_year':year,
+        'present_month':month,
+    }
+    buttons = cl.get_buttons(year, month)
+    context.update(buttons)
+    return render_template('month_sumary.html',**context)
+    # return render_template('month_report.html', report=report)
