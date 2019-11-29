@@ -246,9 +246,8 @@ def delete(img_id, img_name):
     )
     table = dynamodb.Table('Receipts')
     response = table.scan()['Items']
-    namelist = []
     for i in response:
-        if 'img_id' in i:
+        if 'img_id' in i and i['img_id'] == img_id:
             item_id = i['id']
             table.delete_item(
                 Key={
