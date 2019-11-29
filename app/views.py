@@ -34,6 +34,8 @@ def allowed_img(filename):
 
 @app.route('/')
 def index():
+    if 'user' in session:
+        return redirect(url_for('user'))
     return render_template('index.html')
 
 
@@ -196,7 +198,7 @@ def preview():
     namelist = []
     for i in response:
         if 'user' in i and i['user'] == username:
-            namelist.append((i['name'], i['date']))
+            namelist.append((i['name'], i['date'], i['image_id']))
     hists = {}
     s3 = boto3.client('s3')
     for item in namelist:
@@ -205,7 +207,7 @@ def preview():
                                         Params={'Bucket': 'chaoshuai',
                                                 'Key': 'ocr/' + image,
                                                 })
-        hists[url] = (image, item[1])
+        hists[url] = (image, item[1], item[2])
     return render_template('preview.html', hists=hists)
 
 
@@ -213,8 +215,10 @@ def preview():
 def receipt_detail(img_name):
     if 'user' not in session:
         return redirect(url_for('index'))
-    rd=receipt_detail_maker(img_name)
-    context=rd.get_form()
+    rd = receipt_detail_maker(img_name)
+    context = rd.get_form()
+    if context['status'] == '0':
+        return render_template('not_ready.html', img_name=img_name)
     return render_template('detail.html', **context)
 
 
@@ -223,15 +227,85 @@ def modify(img_id):
     if 'user' not in session:
         return redirect(url_for('index'))
     if request.method == 'POST':
-        editor=Receipts_tool()
-        editor.edit_from_submit(form=request.form,img_id=img_id)
+        editor = Receipts_tool()
+        editor.edit_from_submit(form=request.form, img_id=img_id)
         return redirect(url_for('preview'))
 
 
-@app.route('/delete')
-def delete():
-    pass
+@app.route('/delete/<img_id>/<img_name>')
+def delete(img_id, img_name):
+    # return img_id
+    client = boto3.client('s3')
+    client.delete_object(Bucket='chaoshuai', Key='ocr/' + img_name)
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table('images')
+    table.delete_item(
+        Key={
+            'image_id': int(img_id)
+        }
+    )
+    table = dynamodb.Table('Receipts')
+    response = table.scan()['Items']
+    namelist = []
+    for i in response:
+        if 'img_id' in i:
+            item_id = i['id']
+            table.delete_item(
+                Key={
+                    'id': item_id
+                }
+            )
+    return redirect(url_for('preview'))
 
-@app.route('/test')
-def chart():
-    return render_template('bill_chart.html')
+
+@app.route('/report/month_select', methods=['POST', 'GET'])
+def month_select():
+    if 'user' not in session:
+        return redirect(url_for('index'))
+    month = []
+    current_month = int(datetime.datetime.now().month)
+    current_year = int(datetime.datetime.now().year)
+    month.append([current_year, current_month])
+    for i in range(2):
+        current_month -= 1
+        if current_month == 0:
+            current_month = 12
+            current_year -= 1
+        month.append([current_year, current_month])
+    return render_template('select_month.html', month=month)
+
+
+@app.route('/report/month_detail/<year>/<month>')
+def month_report(year, month):
+    if 'user' not in session:
+        return redirect(url_for('index'))
+    year, month = str(year), str(month)
+    username = session['user']
+    table = boto3.resource('dynamodb').Table('images')
+    response = table.scan()['Items']
+    images = []
+    for i in response:
+        if 'user' in i and i['user'] == username and i['year'] == year and i['month'] == month:
+            images.append(str(i['image_id']))
+    if not images:
+        return render_template('no_record.html', year=year, month=month)
+
+    report = {"Sports": 0,
+              "Food": 0,
+              "Games": 0,
+              "Other": 0}
+
+    table = boto3.resource('dynamodb').Table('Receipts')
+    response = table.scan()['Items']
+    for i in response:
+        if 'img_id' in i and i['img_id'] in images and \
+                i['item_name'] != 'TotalPrice' and i['item_name'] != 'Saving' and\
+                i['item_name'] != 'hst':
+            if i['item_tag'] == " ":
+                report['Other'] += float(i['price'])
+            else:
+                item_tag = i['item_tag']
+                report[item_tag] += float(i['price'])
+    for i in report:
+        report[i] = "%.2f" % report[i]
+    return render_template('month_report.html', report=report)

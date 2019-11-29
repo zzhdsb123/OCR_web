@@ -1,0 +1,26 @@
+{% extends 'after_login_base.html'%}
+
+{%block main%}
+<h3 class="page-title">Which month would you like to see?</h3>
+<br>
+<div class="button-list">
+    <div class="btn-group-vertical">
+        <a href="{{ url_for('month_report', year=month.0.0, month=month.0.1) }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">{{ month.0.0 }} - {{ month.0.1 }}</button>
+        </a>
+        <br>
+        <a href="{{ url_for('month_report', year=month.1.0, month=month.1.1) }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">{{ month.1.0 }} - {{ month.1.1 }}</button>
+        </a>
+        <br>
+        <a href="{{ url_for('month_report', year=month.2.0, month=month.2.1) }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">{{ month.2.0 }} - {{ month.2.1 }}</button>
+        </a>
+        <br>
+        <a href="{{ url_for('user') }}" class="button">
+        <button type="button" class="btn btn-primary btn-block">Back</button>
+        </a>
+    </div>
+</div>
+<br>
+{%endblock%}
