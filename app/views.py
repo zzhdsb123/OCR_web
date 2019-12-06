@@ -216,7 +216,7 @@ def receipt_detail(img_name):
     if 'user' not in session:
         return redirect(url_for('index'))
     rd = receipt_detail_maker(img_name)
-    context = rd.get_form()
+    context = rd.get_form
     if context['status'] == '0':
         return render_template('not_ready.html', img_name=img_name)
     return render_template('detail.html', **context)
