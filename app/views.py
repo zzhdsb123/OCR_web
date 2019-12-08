@@ -107,7 +107,7 @@ def register():
         )
 
         session['user'] = username
-        return render_template('user.html')
+        return redirect(url_for('user'))
 
     context = {
         'username_valid': -1,
@@ -152,6 +152,21 @@ def upload():
                 response = dynamodb.get_item(TableName='images', Key={'image_id': {'N': '0'}})
                 current_id = response['Item']['current_id']['N']
                 current_id = str(int(current_id) + 1)
+
+                user_table = boto3.resource('dynamodb').Table('users')
+                current_user = user_table.get_item(
+                    Key={
+                        'username': username
+                    }
+                )
+                item = current_user['Item']
+                if 'images' in current_user["Item"]:
+                    item['images'].append(current_id)
+                    user_table.put_item(Item=item)
+                else:
+                    item['images'] = [current_id]
+                    user_table.put_item(Item=item)
+
                 name = current_id + '.' + ext
                 file.save(name)
                 dynamodb.put_item(
@@ -174,6 +189,7 @@ def upload():
                         'date': {'S': str(datetime.datetime.now().date())}
                     }
                 )
+
                 s3 = boto3.client('s3')
                 s3.upload_file(name, 'chaoshuai', 'ocr/' + name)
                 os.remove(name)
@@ -193,21 +209,36 @@ def preview():
     if 'user' not in session:
         return redirect(url_for('index'))
     username = session['user']
-    table = boto3.resource('dynamodb').Table('images')
-    response = table.scan()['Items']
+    user_table = boto3.resource('dynamodb').Table('users')
+    current_user = user_table.get_item(
+        Key={
+            'username': username
+        }
+    )
+    if 'images' not in current_user["Item"]:
+        return render_template('preview.html')
+    images = current_user["Item"]["images"]
     namelist = []
-    for i in response:
-        if 'user' in i and i['user'] == username:
-            namelist.append((i['name'], i['date'], i['image_id']))
+
+    image_table = boto3.resource('dynamodb').Table('images')
+
+    for image_id in images:
+        current_image = image_table.get_item(Key={
+            'image_id': int(image_id)
+        })
+        try:
+            namelist.append(current_image["Item"])
+        except KeyError:
+            pass
     hists = {}
     s3 = boto3.client('s3')
     for item in namelist:
-        image = item[0]
+        image = item['name']
         url = s3.generate_presigned_url('get_object',
                                         Params={'Bucket': 'chaoshuai',
                                                 'Key': 'ocr/' + image,
                                                 })
-        hists[url] = (image, item[1], item[2])
+        hists[url] = (image, item['date'], item['image_id'])
     return render_template('preview.html', hists=hists)
 
 
@@ -234,7 +265,7 @@ def modify(img_id):
 
 @app.route('/delete/<img_id>/<img_name>')
 def delete(img_id, img_name):
-    # return img_id
+    return img_id
     client = boto3.client('s3')
     client.delete_object(Bucket='chaoshuai', Key='ocr/' + img_name)
     dynamodb = boto3.resource('dynamodb')
@@ -278,20 +309,20 @@ def month_select():
 def month_report():
     if 'user' not in session:
         return redirect(url_for('index'))
-    year=request.args.get('year')
-    month=request.args.get('month')
+    year = request.args.get('year')
+    month = request.args.get('month')
     if not year:
-        year=str(datetime.datetime.now().year)
-        month=str(datetime.datetime.now().month)
+        year = str(datetime.datetime.now().year)
+        month = str(datetime.datetime.now().month)
     username = session['user']
-    cl=chart_tool()
-    datas=cl.get_data_by_mounth(username,year,month)
-    context={
-        'datas':datas,
-        'present_year':year,
-        'present_month':month,
+    cl = chart_tool()
+    datas = cl.get_data_by_mounth(username, year, month)
+    context = {
+        'datas': datas,
+        'present_year': year,
+        'present_month': month,
     }
     buttons = cl.get_buttons(year, month)
     context.update(buttons)
-    return render_template('month_sumary.html',**context)
+    return render_template('month_sumary.html', **context)
     # return render_template('month_report.html', report=report)

@@ -152,11 +152,32 @@ class chart_tool(dynamodb_tool):
 
     def get_data_by_mounth(self, user, year, month):
         username = user
-        table = boto3.resource('dynamodb').Table('images')
-        response = table.scan()['Items']
+        current_user = boto3.resource('dynamodb').Table('users').get_item(
+            Key={
+                'username': username
+            }
+        )["Item"]
+
+        if 'images' not in current_user:
+            response = []
+        else:
+            response = []
+            images_id = current_user['images']
+            image_table = boto3.resource('dynamodb').Table('images')
+            for image_id in images_id:
+                current_image = image_table.get_item(
+                    Key={
+                        'image_id': int(image_id)
+                    }
+                )
+                try:
+                    response.append(current_image["Item"])
+                except KeyError:
+                    pass
+
         images = []
         for i in response:
-            if 'user' in i and i['user'] == username and i['year'] == year and i['month'] == month:
+            if i['year'] == year and i['month'] == month:
                 images.append(str(i['image_id']))
         datas = []
         tags_cnt = {}
@@ -179,7 +200,10 @@ class chart_tool(dynamodb_tool):
                 img_id = item['img_id']
                 item_tag = item['item_tag']
                 item_price = item['price']
-                if img_id in images and 'saving' not in item_name.lower() and 'hst' not in item_name.lower():
+                if img_id in images and\
+                        'saving' not in item_name.lower() and\
+                        'hst' not in item_name.lower() and\
+                        item_name != 'TotalPrice':
                     if item_tag == ' ':
                         item_tag = 'Others'
                     if not tags_cnt.get(item_tag):
@@ -188,8 +212,6 @@ class chart_tool(dynamodb_tool):
                     else:
                         tags_cnt[item_tag] += float(item_price)
                         Sum += float(item_price)
-
-
 
         for tag_name, count in tags_cnt.items():
             data = {
